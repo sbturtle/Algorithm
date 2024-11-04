@@ -10,15 +10,13 @@ int solution(vector<int> p, int limit) {
     sort(p.begin(), p.end());
     int st = 0, ed = p.size() - 1;
     
-    while(st < ed) {                   
+    while(st <= ed) {                   
         if(p[st] + p[ed] <= limit)
             st++;
         
         ed--;        
         answer++;
     }
-    if(st == ed)
-        answer++;
     
     return answer;
 }
