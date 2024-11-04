@@ -1,31 +1,31 @@
 #include <iostream>
 using namespace std;
 
-int weight[101];
-int value[101];
-int d[101][100001];
-int main(){
-    cin.tie(0); 
-    cout.tie(0); 
+int w[101];
+int v[101];
+int dp[101][100001];
+int main() {
+    cin.tie(0);
+    cout.tie(0);
     ios::sync_with_stdio(false);
 
-    int N,K;
-    cin >> N >> K;
+    int n, k;
+    cin >> n >> k;
 
-    for(int i = 1; i<=N; i++){
-        cin >> weight[i];
-        cin >> value[i];
+    for (int i = 1; i <= n; i++) {
+        cin >> w[i];
+        cin >> v[i];
     }
 
-    for(int i = 1; i <= N; i++){
-        for(int j = 1; j<= K; j++){
-            if(j >= weight[i]) 
-                d[i][j] = max(d[i-1][j],d[i-1][j-weight[i]]+value[i]);
-            else 
-                d[i][j] = d[i-1][j];
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= k; j++) {
+            if (j >= w[i])
+                dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - w[i]] + v[i]);
+            else
+                dp[i][j] = dp[i - 1][j];
         }
     }
 
-    cout << d[N][K];
+    cout << dp[n][k];
 
 }
