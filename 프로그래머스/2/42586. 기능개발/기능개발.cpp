@@ -1,52 +1,26 @@
 #include <string>
 #include <vector>
-#include <queue>
-#include <iostream>
-
 using namespace std;
 
-vector<int> solution(vector<int> pr, vector<int> sp) {
+vector<int> solution(vector<int> progresses, vector<int> speeds) {
     vector<int> answer;
-    
-    int s = pr.size();
-    vector<int> day(s);
-    
-    while(true) {
-        bool isAllFinish = true;
-        for(int i = 0; i < s; i++) {
-            if(pr[i] >= 100)
-                continue;
-            isAllFinish = false;
-            pr[i] += sp[i];
-            day[i]++;
-        }
-        if(isAllFinish) break;
-    }
-    for(int i = 1; i < s; i++) {
-      if(day[i - 1] >= day[i])
-          day[i] = day[i - 1];
-    }
-    for(int n : day)
-        cout << n << '\t';
-    queue<int> q;
-    q.push(day[0]);
-    for(int i = 1; i < s; i++) {
-        if(q.empty())
-            q.push(day[i]);
-            
-        int n = q.front();        
+
+    int day;
+    int max_day = 0;
+    for (int i = 0; i < progresses.size(); ++i)
+    {
+        // (남은 일수 / 작업 속도) + 1
+        day = (99 - progresses[i]) / speeds[i] + 1;
+
+        if (answer.empty() || max_day < day)
+            answer.push_back(1);
+        else
+            ++answer.back();    // ++제일 뒤의 값
         
-        if(n >= day[i])
-            q.push(day[i]);
-        else {
-            answer.push_back(q.size());
-            while(!q.empty()) 
-                q.pop();
-            q.push(day[i]);
-        }
+
+        if (max_day < day)
+            max_day = day;
     }
-    if(!q.empty())
-        answer.push_back(q.size());        
-    
+
     return answer;
 }
