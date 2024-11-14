@@ -22,17 +22,15 @@ int main(int argc, char** argv)
                 cin >> mp[i][j];
         
          for(int j = 0; j < n; j++) {
-            int sum = 0;
             bool isn = false;
             for(int i = 0; i < n; i++) {
                 if(mp[i][j] == 1) 
                     isn = true;
                 else if(mp[i][j] == 2 && isn) {
                     isn = false;
-                    sum++;
+                    result++;
                 }
             }               
-            result += sum;
         }
 	
 		cout << '#' << test_case << ' ' << result << '\n';
