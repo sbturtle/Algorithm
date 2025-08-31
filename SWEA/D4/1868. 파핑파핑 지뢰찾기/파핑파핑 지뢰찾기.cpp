@@ -1,100 +1,89 @@
-#include<iostream>
-#include<queue>
-#include<algorithm>
-using namespace std;
+import java.util.*;
+import java.io.*;
 
-#define X first
-#define Y second
+class Solution {
 
-int n;
-string board[301];
-bool isvis[301][301];
+	static int dx[] = { -1, -1, -1, 0, 0, 1, 1, 1 };
+	static int dy[] = { -1, 0, 1, -1, 1, -1, 0, 1 };
+	static int result, n;
+	static char[][] map;
 
-int dx[] = {1, 1, 1, 0, -1, -1, -1, 0};
-int dy[] = {1, 0, -1, -1, -1, 0, 1, 1};
+	static boolean check(int x, int y) {
+		for (int i = 0; i < 8; i++) {
+			int nx = dx[i] + x;
+			int ny = dy[i] + y;
 
-bool FindMine(int x, int y) {
-    int cnt = 0;
-    for(int i = 0; i < 8; i++) {
-        int nx = x + dx[i];
-        int ny = y + dy[i];
-        if(nx < 0 || ny < 0 || nx >= n || ny >= n)
-            continue;
-        if(board[nx][ny] == '*')
-            return true;
-    }
-    return false;
-}
+			if (nx < 0 || ny < 0 || nx >= n || ny >= n)
+				continue;
+			if (map[nx][ny] == '*')
+				return false;
+		}
+		return true;
+	}
 
-void Func(int x, int y) {
-    queue<pair<int, int>> q;
-    q.push({x,y});
-    isvis[x][y] = true;
+	public static void main(String args[]) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = null;
+		StringBuilder sb = new StringBuilder();
 
-    while(!q.empty()) {
-        auto cur = q.front(); q.pop();
+		int T = Integer.parseInt(br.readLine());
+		for (int test_case = 1; test_case <= T; test_case++) {
+			sb.append('#').append(test_case).append(' ');
 
-        if(FindMine(cur.X, cur.Y))
-            continue;
+			st = new StringTokenizer(br.readLine());
+			n = Integer.parseInt(st.nextToken());
 
-        for(int i = 0; i < 8; i++) {
-            int nx = cur.X + dx[i];
-            int ny = cur.Y + dy[i];
+			result = 0;
 
-            if(nx < 0 || ny < 0 || nx >= n || ny >= n)
-                continue;
-            if(isvis[nx][ny])
-                continue;
+			map = new char[n][n];
 
-            isvis[nx][ny] = true;
-            q.push({nx, ny});
-        }
-    }
-}
+			for (int i = 0; i < n; i++) {
+				map[i] = br.readLine().toCharArray();
+			}
 
-int main(int argc, char** argv)
-{
-    ios::sync_with_stdio(0);
-    cin.tie(0);
+			Queue<int[]> q = new ArrayDeque<>();
+			for (int i = 0; i < n; i++) {
+				for (int j = 0; j < n; j++) {
+					if (map[i][j] != '.')
+						continue;
+					if (!check(i, j))
+						continue;
 
-    int test_case;
-    int T;
+					result++;
+					q.offer(new int[] { i, j });
+					map[i][j] = 'f';
+					while (!q.isEmpty()) {
+						int[] cur = q.poll();
+						for (int dir = 0; dir < 8; dir++) {
+							int nx = dx[dir] + cur[0];
+							int ny = dy[dir] + cur[1];
 
-    cin >> T;
+							if (nx < 0 || ny < 0 || nx >= n || ny >= n)
+								continue;
 
-    for(test_case = 1; test_case <= T; ++test_case)
-    {
-        cin >> n;
-        int result = 0;
+							if (map[nx][ny] != '.')
+								continue;
+							map[nx][ny] = 'f';
 
-        for(int i = 0; i < n; i++)
-            fill(isvis[i], isvis[i] + n, false);
+							if (!check(nx, ny))
+								continue;
 
-        for(int i = 0; i < n; i++)
-            cin >> board[i];
+							q.offer(new int[] { nx, ny });
+						}
+					}
+				}
+			}
 
-        for(int i = 0; i < n; i++) {
-            for(int j = 0; j < n; j++) {
-                if(board[i][j] == '*' || isvis[i][j])
-                    continue;
+			for (int i = 0; i < n; i++) {
+				for (int j = 0; j < n; j++) {
+					if (map[i][j] == '.')
+						result++;
+				}
+			}
 
-                if(!FindMine(i,j)) {
-                    Func(i,j);
-                    result++;
-                }
-            }
-        }
+			sb.append(result).append('\n');
+		}
 
-        for(int i = 0; i < n; i++) {
-            for(int j = 0; j < n; j++) {
-                if(board[i][j] == '*' || isvis[i][j])
-                    continue;
-                
-                result++;
-            }
-        }
-
-        cout << '#' << test_case << ' ' << result << '\n';
-    }
-    return 0;
+		System.out.println(sb);
+	}
 }
