@@ -12,12 +12,14 @@ public class Main {
 		int n = Integer.parseInt(st.nextToken());
 		int m = Integer.parseInt(st.nextToken());
 
-		int[][] arr = new int[n][m];
+		boolean[][] arr = new boolean[n][m];
 		int[][] isvis = new int[n][m];
+		int[][] result = new int[n][m];
+
 		for (int i = 0; i < n; i++) {
 			char[] ch = br.readLine().toCharArray();
 			for (int j = 0; j < m; j++) {
-				arr[i][j] = ch[j] - '0';
+				arr[i][j] = ch[j] == '1' ? true : false;
 			}
 			Arrays.fill(isvis[i], -1);
 		}
@@ -28,11 +30,12 @@ public class Main {
 		// 모든 벽에 대해 해야 하기에, 그냥 0 덩어리를 먼저 찾아, 인덱스 번호를 부여하고
 		// 각 인덱스의 크기를 제공하는 것은 어떨까?
 		// 그럼 각 벽별로 인접한 0의 인덱스들의 합 + 자기 자신의 크기 1로 끝날 것같은데.
+        int cnt = 1;
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < m; j++) {
-				if (arr[i][j] == 1 || isvis[i][j] != -1)
+				if (arr[i][j] || isvis[i][j] != -1)
 					continue;
-				int cnt = 1;
+				cnt = 1;
 				isvis[i][j] = list.size();
 				q.offer(new int[] { i, j });
 
@@ -43,7 +46,7 @@ public class Main {
 						int ny = dy[d] + cur[1];
 						if (nx < 0 || ny < 0 || nx >= n || ny >= m)
 							continue;
-						if (arr[nx][ny] == 1 || isvis[nx][ny] != -1)
+						if (arr[nx][ny] || isvis[nx][ny] != -1)
 							continue;
 						isvis[nx][ny] = isvis[cur[0]][cur[1]];
 						cnt++;
@@ -54,20 +57,18 @@ public class Main {
 			}
 		}
 
-		int[][] result = new int[n][m];
-
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < m; j++) {
-				if (arr[i][j] == 0)
+				if (!arr[i][j])
 					continue;
-				int cnt = 1;
+				cnt = 1;
 				int[] f = new int[] { -1, -1, -1, -1 };
 				outer: for (int d = 0; d < 4; d++) {
 					int nx = dx[d] + i;
 					int ny = dy[d] + j;
 					if (nx < 0 || ny < 0 || nx >= n || ny >= m)
 						continue;
-					if (arr[nx][ny] == 1)
+					if (arr[nx][ny])
 						continue;
 					for (int k = 0; k < d; k++) {
 						if (isvis[nx][ny] == f[k])
@@ -81,14 +82,13 @@ public class Main {
 				result[i][j] = cnt % 10;
 			}
 		}
+
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < m; j++) {
 				sb.append(result[i][j]);
 			}
 			sb.append('\n');
 		}
-
 		System.out.println(sb);
 	}
-
 }
