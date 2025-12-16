@@ -38,7 +38,7 @@ public class Main {
 		dist = new int[n + 1];
 		Arrays.fill(dist, Integer.MAX_VALUE);
 
-		PriorityQueue<int[]> pq = new PriorityQueue<>((o1, o2) -> o1[0] - o2[0]);
+		PriorityQueue<int[]> pq = new PriorityQueue<>((o1, o2) -> Integer.compare(o1[0], o2[0]));
 
 		dist[s] = 0;
 		pq.offer(new int[] { 0, s });
